@@ -10,7 +10,6 @@ const PopUp = ({ setIsPopUpShow, tasksArray, setTasksArray }) => {
   });
 
   const addNewTask = () => {
-    console.log(taskData)
     setTasksArray([...tasksArray, taskData])
     setIsPopUpShow(false);
   }

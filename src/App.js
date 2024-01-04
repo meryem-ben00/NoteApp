@@ -1,70 +1,15 @@
-import { useEffect, useState } from "react";
-import Navigation from "./components/Navigation";
-import NotesHolder from "./components/NotesHolder/NotesHolder";
-import DeletePopup from "./components/PopUp/DeletePopup";
-import PopUp from "./components/PopUp/PopUp";
-import UpdatePopup from "./components/PopUp/UpdatePopup";
+import { Route, Routes } from "react-router-dom";
+import Home from "./components/Home/Home";
+import SignIn from "./components/SignIn/SignIn";
+import SignUp from "./components/SignUp/SignUp";
 
 function App() {
-  const apiEndpoint = "https://g4ubrp7tn2.execute-api.us-east-1.amazonaws.com/test";
-  const [isPopUpShow, setIsPopUpShow] = useState(false);
-  const [tasksArray, setTasksArray] = useState([]);
-  const [selectedNote, setSelect]=useState();
-
-  const fetchAllTasksFromDynamo = () => {
-    fetch(apiEndpoint)
-    .then(response => response.json())
-    .then(data => setTasksArray(data))
-    .catch(error => console.error('Error:', error));
-  }
-
-  useEffect(() => {
-    fetchAllTasksFromDynamo();
-  }, []);
-
-
   return (
-    <div className="AppCom relative flex">
-      { 
-        isPopUpShow ? 
-          <PopUp 
-            apiEndpoint={apiEndpoint}
-            fetchAllTasksFromDynamo={fetchAllTasksFromDynamo}
-            setIsPopUpShow={setIsPopUpShow} 
-          /> : 
-        null
-      }
-
-      <Navigation 
-        setIsPopUpShow={setIsPopUpShow} />
-
-      <NotesHolder 
-        tasksArray={tasksArray} 
-        setTasksArray={setTasksArray} 
-        setSelect={setSelect}
-        />
-
-      { selectedNote?.action==="Delete" ?
-        <DeletePopup 
-          apiEndpoint={apiEndpoint}
-          fetchAllTasksFromDynamo={fetchAllTasksFromDynamo}
-          setSelect={setSelect} 
-          selectedNote={selectedNote} 
-          tasksArray={tasksArray}/>
-          : null
-        }
-
-      { selectedNote?.action==="Edit" ?
-        <UpdatePopup 
-          apiEndpoint={apiEndpoint}
-          fetchAllTasksFromDynamo={fetchAllTasksFromDynamo}
-          setSelect={setSelect} 
-          selectedNote={selectedNote} 
-          tasksArray={tasksArray}/>
-        : null
-      }
-
-    </div>
+    <Routes>
+      <Route path="/" element={< Home />} />
+      <Route path="/signIn" element={< SignIn />} />
+      <Route path="/signUp" element={< SignUp />} />
+    </Routes>
   );
 }
 

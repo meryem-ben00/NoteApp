@@ -3,14 +3,26 @@ import closeIcon from '../../assets/icons/close.svg';
 import deleteIcon from '../../assets/icons/delete.svg';
 import pencilIcon from '../../assets/icons/edit.svg';
 
-const PopUp = ({ setIsPopUpShow, tasksArray, setTasksArray }) => {
+const PopUp = (
+  { 
+    apiEndpoint,
+    fetchAllTasksFromDynamo,
+    setIsPopUpShow,  
+  }
+) => {
   const [taskData, setTaskData] = useState({
     title: "",
     description: ""
   });
 
   const addNewTask = () => {
-    setTasksArray([...tasksArray, taskData])
+    fetch(apiEndpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(taskData),
+    }).then(() => fetchAllTasksFromDynamo())
     setIsPopUpShow(false);
   }
 

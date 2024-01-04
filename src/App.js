@@ -1,33 +1,69 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navigation from "./components/Navigation";
 import NotesHolder from "./components/NotesHolder/NotesHolder";
-import PopUp from "./components/PopUp/PopUp";
 import DeletePopup from "./components/PopUp/DeletePopup";
+import PopUp from "./components/PopUp/PopUp";
 import UpdatePopup from "./components/PopUp/UpdatePopup";
 
-
-
-
 function App() {
+  const apiEndpoint = "https://g4ubrp7tn2.execute-api.us-east-1.amazonaws.com/test";
   const [isPopUpShow, setIsPopUpShow] = useState(false);
   const [tasksArray, setTasksArray] = useState([]);
-  const [selectedNote,setSelect]=useState();
+  const [selectedNote, setSelect]=useState();
+
+  const fetchAllTasksFromDynamo = () => {
+    fetch(apiEndpoint)
+    .then(response => response.json())
+    .then(data => setTasksArray(data))
+    .catch(error => console.error('Error:', error));
+  }
+
+  useEffect(() => {
+    fetchAllTasksFromDynamo();
+  }, []);
+
 
   return (
     <div className="AppCom relative flex">
       { 
         isPopUpShow ? 
           <PopUp 
+            apiEndpoint={apiEndpoint}
+            fetchAllTasksFromDynamo={fetchAllTasksFromDynamo}
             setIsPopUpShow={setIsPopUpShow} 
-            tasksArray={tasksArray} setTasksArray={setTasksArray} 
           /> : 
         null
       }
-      <Navigation setIsPopUpShow={setIsPopUpShow} />
-      <NotesHolder tasksArray={tasksArray} setTasksArray={setTasksArray} setSelect={setSelect}/>
 
-      {selectedNote?.action==="Delete"?<DeletePopup setSelect={setSelect} selectedNote={selectedNote} setTasksArray={setTasksArray} />:null}
-      {selectedNote?.action==="Edit"?<UpdatePopup setSelect={setSelect} selectedNote={selectedNote} tasksArray={tasksArray} setTasksArray={setTasksArray}/>:null}
+      <Navigation 
+        setIsPopUpShow={setIsPopUpShow} />
+
+      <NotesHolder 
+        tasksArray={tasksArray} 
+        setTasksArray={setTasksArray} 
+        setSelect={setSelect}
+        />
+
+      { selectedNote?.action==="Delete" ?
+        <DeletePopup 
+          apiEndpoint={apiEndpoint}
+          fetchAllTasksFromDynamo={fetchAllTasksFromDynamo}
+          setSelect={setSelect} 
+          selectedNote={selectedNote} 
+          tasksArray={tasksArray}/>
+          : null
+        }
+
+      { selectedNote?.action==="Edit" ?
+        <UpdatePopup 
+          apiEndpoint={apiEndpoint}
+          fetchAllTasksFromDynamo={fetchAllTasksFromDynamo}
+          setSelect={setSelect} 
+          selectedNote={selectedNote} 
+          tasksArray={tasksArray}/>
+        : null
+      }
+
     </div>
   );
 }

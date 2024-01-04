@@ -2,17 +2,30 @@ import React, { useState } from 'react';
 import closeIcon from '../../assets/icons/close.svg';
 
 
-const UpdatePopup = ({setSelect,selectedNote,setTasksArray,tasksArray}) => {
+const UpdatePopup = ({
+  setSelect,
+  selectedNote,
+  tasksArray,
+  apiEndpoint,
+  fetchAllTasksFromDynamo
+}) => {
     const [newNote,setNote]=useState({
-        title: tasksArray[selectedNote.index].title,
-        description: tasksArray[selectedNote.index].description
+      title: tasksArray[selectedNote.index].title,
+      description: tasksArray[selectedNote.index].description
     });
-    const updateNotes=()=>{
-        setTasksArray(items=>{
-            return items.map((e,i)=>(i===selectedNote.index?newNote:e))
-        });
-        setSelect();
+
+    const updateNotes= () => {
+      fetch(apiEndpoint, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newNote),
+      }).then(() => fetchAllTasksFromDynamo())
+
+      setSelect();
     }
+
   return (
     <div className='absolute z-50 w-full h-full bg-[#81818150] flex justify-center items-center'>
 

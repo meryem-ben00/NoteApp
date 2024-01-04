@@ -2,7 +2,7 @@ import React from 'react'
 import chevronDownIcon from '../../assets/icons/chevronDown.svg'
 import './NotesHolder.css'
 
-const NotesHolder = ({ tasksArray,setSelect }) => {
+const NotesHolder = ({ tasksArray, setSelect }) => {
 
   return (
     <div className='notesHolderCom flex-grow p-3'>
@@ -29,8 +29,14 @@ const NotesHolder = ({ tasksArray,setSelect }) => {
                     <span className='flex-grow overflow-hidden text-xs text-center opacity-90'>
                       {task.description ? task.description : null}
                     </span>
-                    <button className="py-1 px-4 bg-black text-white me-16" onClick={()=>setSelect({action:"Edit",index:index})}>Edit</button>
-                    <button className="py-1 px-4 bg-black text-white" onClick={()=>setSelect({action:"Delete",index:index})}>Delete</button>
+                    <button 
+                      className="py-1 px-4 bg-black text-white me-16" 
+                      onClick={()=>setSelect({action:"Edit",index:index})}
+                    >Edit</button>
+                    <button 
+                      className="py-1 px-4 bg-black text-white" 
+                      onClick={()=>setSelect({action:"Delete",index:index})}
+                    >Delete</button>
                   </div>
                 ))
               }
